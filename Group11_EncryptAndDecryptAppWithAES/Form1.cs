@@ -1,7 +1,13 @@
-using System.Security.Cryptography;
 using System.IO;
+using System.Text;
+using System.Security.Cryptography;
 using Word = Microsoft.Office.Interop.Word;
-using Aspose.Words;
+using GemBox.Document;
+using Xceed.Words.NET;
+using Xceed.Document.NET;
+using Syncfusion.DocIO;
+using Syncfusion.DocIO.DLS;
+using System.Windows;
 
 namespace Group11_EncryptAndDecryptAppWithAES
 {
@@ -12,7 +18,15 @@ namespace Group11_EncryptAndDecryptAppWithAES
         public Form1()
         {
             InitializeComponent();
+            //ApplyGemBoxLicense();
         }
+        
+        /*
+         * private void ApplyGemBoxLicense()
+         * {
+         *   ComponentInfo.SetLicense("FREE-LIMITED-KEY");
+         * }
+         */
 
         // ham chon file txt hoac Word
         private void chooseFileBtn_Click(object sender, EventArgs e)
@@ -28,17 +42,18 @@ namespace Group11_EncryptAndDecryptAppWithAES
                     if (openFileDialog.FileName.EndsWith(".txt"))
                     {
                         fileContent = File.ReadAllText(openFileDialog.FileName);
+                        richTextBoxFirst.Text = fileContent;
                     }
                     else if (openFileDialog.FileName.EndsWith(".doc") || openFileDialog.FileName.EndsWith(".docx"))
                     {
                         fileContent = ReadWordFile(openFileDialog.FileName);
+                       richTextBoxFirst.Rtf = fileContent;
                     }
-
-                    richTextBoxFirst.Text = fileContent;
+                    //richTextBoxFirst.Text = fileContent;
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Error reading file: " + ex.Message);
+                    System.Windows.Forms.MessageBox.Show("Error reading file: " + ex.Message);
                 }
             }
         }
@@ -46,53 +61,49 @@ namespace Group11_EncryptAndDecryptAppWithAES
         // ham doc du lieu tu file word
         private string ReadWordFile(string fileName)
         {
-            /* su dung thu vien Microsoft.Office.Interop.Word
-            Word.Application wordApp = null;
-            Word.Document doc = null;
-            string fileContent = string.Empty;
-
-            try
+            
+            using (FileStream fileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
             {
-                wordApp = new Word.Application();
-                doc = wordApp.Documents.Open(fileName);
-
-                foreach (Word.Paragraph paragraph in doc.Paragraphs)
+                using (WordDocument document = new WordDocument(fileStream, FormatType.Automatic))
                 {
-                    fileContent += paragraph.Range.Text;
+                    // Tao MemoryStream de luu noi dung RTF
+                    using (MemoryStream stream = new MemoryStream())
+                    {
+                        // Luu tai lieu duoi dang RTF
+                        document.Save(stream, FormatType.Rtf);
+                        stream.Position = 0;
+
+                        // Doc noi dung RTF tu MemoryStream
+                        using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+                        {
+                            string content = reader.ReadToEnd();
+                            return RemoveTrialWatermark(content);
+                        }
+                    }
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error reading Word file: " + ex.Message);
-            }
-            finally
-            {
-                if (doc != null)
-                {
-                    doc.Close();
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(doc);
-                }
-                if (wordApp != null)
-                {
-                    wordApp.Quit();
-                    System.Runtime.InteropServices.Marshal.ReleaseComObject(wordApp);
-                }
-            }
-
-            return fileContent;*/
-
-            // su dung thu vien Aspose.Words
-            try
-            {
-                Document doc = new Document(fileName);
-                return doc.ToString(SaveFormat.Text);
-            }
-            catch(Exception ex) 
-            {
-                MessageBox.Show("Error reading Word file: " + ex.Message);
-                return string.Empty;
-            }
+            
         }
+
+        private string RemoveTrialWatermark(string content)
+        {
+            string[] trialMessages = new string[]
+            {
+                "Created with a trial version of Syncfusion Word library or registered the wrong key in your application.",
+                "Click here to obtain the valid key.",
+            };
+
+            foreach (var trialMessage in trialMessages)
+            {
+                content = content.Replace(trialMessage, string.Empty);
+            }
+
+            content = content.Trim();
+
+            return content;
+        }
+
+
 
         // ham chuyen doi che do giua Ma hoa va Giai ma
         private void btnChangeMode_Click(object sender, EventArgs e)
