@@ -1,3 +1,4 @@
+using System.Windows;
 using System.IO;
 using System.Text;
 using System.Security.Cryptography;
@@ -7,7 +8,6 @@ using Xceed.Words.NET;
 using Xceed.Document.NET;
 using Syncfusion.DocIO;
 using Syncfusion.DocIO.DLS;
-using System.Windows;
 
 namespace Group11_EncryptAndDecryptAppWithAES
 {
@@ -18,15 +18,7 @@ namespace Group11_EncryptAndDecryptAppWithAES
         public Form1()
         {
             InitializeComponent();
-            //ApplyGemBoxLicense();
         }
-        
-        /*
-         * private void ApplyGemBoxLicense()
-         * {
-         *   ComponentInfo.SetLicense("FREE-LIMITED-KEY");
-         * }
-         */
 
         // ham chon file txt hoac Word
         private void chooseFileBtn_Click(object sender, EventArgs e)
@@ -47,7 +39,7 @@ namespace Group11_EncryptAndDecryptAppWithAES
                     else if (openFileDialog.FileName.EndsWith(".doc") || openFileDialog.FileName.EndsWith(".docx"))
                     {
                         fileContent = ReadWordFile(openFileDialog.FileName);
-                       richTextBoxFirst.Rtf = fileContent;
+                        richTextBoxFirst.Text = fileContent;
                     }
                     //richTextBoxFirst.Text = fileContent;
                 }
@@ -61,49 +53,22 @@ namespace Group11_EncryptAndDecryptAppWithAES
         // ham doc du lieu tu file word
         private string ReadWordFile(string fileName)
         {
-            
-            using (FileStream fileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+            // license for GemBox.Document
+            ComponentInfo.SetLicense("FREE-LIMITED-KEY");
+            string fileContent = string.Empty;
+            try
             {
-                using (WordDocument document = new WordDocument(fileStream, FormatType.Automatic))
-                {
-                    // Tao MemoryStream de luu noi dung RTF
-                    using (MemoryStream stream = new MemoryStream())
-                    {
-                        // Luu tai lieu duoi dang RTF
-                        document.Save(stream, FormatType.Rtf);
-                        stream.Position = 0;
-
-                        // Doc noi dung RTF tu MemoryStream
-                        using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
-                        {
-                            string content = reader.ReadToEnd();
-                            return RemoveTrialWatermark(content);
-                        }
-                    }
-                }
+                var document = DocumentModel.Load(fileName);
+                
+                fileContent = document.Content.ToString();
             }
-            
-        }
-
-        private string RemoveTrialWatermark(string content)
-        {
-            string[] trialMessages = new string[]
+            catch (Exception ex)
             {
-                "Created with a trial version of Syncfusion Word library or registered the wrong key in your application.",
-                "Click here to obtain the valid key.",
-            };
-
-            foreach (var trialMessage in trialMessages)
-            {
-                content = content.Replace(trialMessage, string.Empty);
+                System.Windows.Forms.MessageBox.Show("Error reading Word file: " + ex.Message);
             }
 
-            content = content.Trim();
-
-            return content;
+            return fileContent;
         }
-
-
 
         // ham chuyen doi che do giua Ma hoa va Giai ma
         private void btnChangeMode_Click(object sender, EventArgs e)
