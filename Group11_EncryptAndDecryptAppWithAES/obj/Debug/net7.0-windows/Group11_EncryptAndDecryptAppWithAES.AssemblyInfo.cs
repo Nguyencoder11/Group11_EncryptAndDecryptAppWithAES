@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Group11_EncryptAndDecryptAppWithAES")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+67d659a410e64cb0c3199ee19cba23ad184e36fa")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+73c6b342c9a38b49c79c33eaca386bb69472dcb1")]
 [assembly: System.Reflection.AssemblyProductAttribute("Group11_EncryptAndDecryptAppWithAES")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Group11_EncryptAndDecryptAppWithAES")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

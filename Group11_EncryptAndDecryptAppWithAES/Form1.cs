@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using System.IO;
 using System.Text;
 using Word = Microsoft.Office.Interop.Word;
@@ -73,6 +73,7 @@ namespace Group11_EncryptAndDecryptAppWithAES
                         document.Content.LoadText(richTextBoxSecond.Text);
 
                         GemBox.Document.SaveOptions options = GemBox.Document.SaveOptions.DocxDefault;
+                        /*
                         if (filePath.EndsWith(".doc"))
                         {
                             options = GemBox.Document.SaveOptions.DocxDefault;
@@ -81,7 +82,7 @@ namespace Group11_EncryptAndDecryptAppWithAES
                         {
                             options = GemBox.Document.SaveOptions.DocxDefault;
                         }
-
+                        */
                         document.Save(filePath, options);
                     }
                     catch (Exception ex)
@@ -146,6 +147,7 @@ namespace Group11_EncryptAndDecryptAppWithAES
                         document.Content.LoadText(richTextBoxFourth.Text);
 
                         GemBox.Document.SaveOptions options = GemBox.Document.SaveOptions.DocxDefault;
+                        /*
                         if (filePath.EndsWith(".doc"))
                         {
                             options = GemBox.Document.SaveOptions.DocxDefault;
@@ -154,7 +156,7 @@ namespace Group11_EncryptAndDecryptAppWithAES
                         {
                             options = GemBox.Document.SaveOptions.DocxDefault;
                         }
-
+                        */
                         document.Save(filePath, options);
                     }
                     catch (Exception ex)
@@ -260,7 +262,7 @@ namespace Group11_EncryptAndDecryptAppWithAES
         private byte[] KeyExpansion(byte[] key)
         {
             int keySize = key.Length;
-            int expandedKeySize = 176; // For AES-128
+            int expandedKeySize = 176; 
             byte[] expandedKey = new byte[expandedKeySize];
 
             Array.Copy(key, expandedKey, keySize);
@@ -279,7 +281,7 @@ namespace Group11_EncryptAndDecryptAppWithAES
                 if (bytesGenerated % keySize == 0)
                 {
                     temp = SubWord(RotWord(temp));
-                    temp[0] ^= Rcon[rconIndex++];
+                    temp[0] ^= Rcon[rconIndex++];   // for XOR with Rcon[j/4]
                 }
 
                 for (int i = 0; i < 4; i++)
@@ -307,8 +309,6 @@ namespace Group11_EncryptAndDecryptAppWithAES
             }
             return word;
         }
-
-        // function for XOR with Rcon[j/4]
 
 
         /* Cac ham su dung cho qua trinh ma hoa */
@@ -414,7 +414,8 @@ namespace Group11_EncryptAndDecryptAppWithAES
                 byte[] tempRow = new byte[4];
                 for (int j = 0; j < 4; j++)
                 {
-                    tempRow[j] = state[i, (j - i + 4) % 4];
+                    //tempRow[j] = state[i, (j - i + 4) % 4];
+                    tempRow[(j + i) % 4] = state[i, j];
                 }
                 for (int j = 0; j < 4; j++)
                 {
@@ -439,119 +440,6 @@ namespace Group11_EncryptAndDecryptAppWithAES
                 state[3, i] = (byte)(Gmul(a, 0x0b) ^ Gmul(b, 0x0d) ^ Gmul(c, 0x09) ^ Gmul(d, 0x0e));
             }
         }
-
-
-        /*
-        // ham EncryptAES de thuc hien qua trinh ma hoa
-        private byte[] EncryptAES(byte[] plaintext, byte[] key)
-        {
-            byte[,] state = new byte[4, 4];
-            byte[] expandedKey = KeyExpansion(key);
-
-            for (int i = 0; i < 16; i++)
-            {
-                state[i % 4, i / 4] = plaintext[i];
-            }
-
-            AddRoundKey(state, expandedKey);
-
-            for (int round = 1; round <= 10; round++)
-            {
-                SubBytes(state);
-                ShiftRows(state);
-                if (round != 10)
-                {
-                    MixColumns(state);
-                }
-                AddRoundKey(state, expandedKey.Skip(round * 16).Take(16).ToArray());
-            }
-
-            byte[] encrypted = new byte[16];
-            for (int i = 0; i < 16; i++)
-            {
-                encrypted[i] = state[i % 4, i / 4];
-            }
-
-            return encrypted;
-        }
-
-        // ham DecryptAES de thuc hien qua trinh giai ma
-        private byte[] DecryptAES(byte[] ciphertext, byte[] key)
-        {
-            byte[,] state = new byte[4, 4];
-            byte[] expandedKey = KeyExpansion(key);
-
-            for (int i = 0; i < 16; i++)
-            {
-                state[i % 4, i / 4] = ciphertext[i];
-            }
-
-            AddRoundKey(state, expandedKey.Skip(10 * 16).Take(16).ToArray());
-
-            for (int round = 9; round >= 0; round--)
-            {
-                InvShiftRows(state);
-                InvSubBytes(state);
-                AddRoundKey(state, expandedKey.Skip(round * 16).Take(16).ToArray());
-                if (round != 0)
-                {
-                    InvMixColumns(state);
-                }
-            }
-
-            byte[] decrypted = new byte[16];
-            for (int i = 0; i < 16; i++)
-            {
-                decrypted[i] = state[i % 4, i / 4];
-            }
-
-            return decrypted;
-        }
-        */
-
-        /*
-        // goi toi ham EncryptAES
-        private void btnEncrypt_Click(object sender, EventArgs e)
-        {
-            // lay du lieu text tu richTextBoxFirst de ma hoa
-            string plainText = richTextBoxFirst.Text;
-
-            // thuc hien ma hoa theo giai thuat AES
-            // Convert the plaintext to bytes
-            byte[] plainBytes = Encoding.UTF8.GetBytes(plainText.PadRight(16, '\0').Substring(0, 16));
-
-            // Auto-generate a key
-            autoGenerateKey();
-
-            // Encrypt the plaintext
-            byte[] encryptedBytes = EncryptAES(plainBytes, key);
-
-            // hien thi du lieu da ma hoa len richTextBoxSecond
-            richTextBoxSecond.Text = BitConverter.ToString(encryptedBytes).Replace("-", "");
-        }
-
-        // goi toi ham DecryptAES
-        private void btnDecrypt_Click(object sender, EventArgs e)
-        {
-            // lay du lieu text tu richTextBoxThird de giai ma
-            string cipherText = richTextBoxThird.Text;
-
-            // thuc hien giai max theo giai thuat AES
-            // Convert the ciphertext from hex string to bytes
-            byte[] cipherBytes = new byte[cipherText.Length / 2];
-            for (int i = 0; i < cipherBytes.Length; i++)
-            {
-                cipherBytes[i] = Convert.ToByte(cipherText.Substring(i * 2, 2), 16);
-            }
-
-            // Decrypt the ciphertext
-            byte[] decryptedBytes = DecryptAES(cipherBytes, key);
-
-            // hien thi du lieu da giai ma len richTextBoxFourth
-            richTextBoxFourth.Text = Encoding.UTF8.GetString(decryptedBytes).TrimEnd('\0');
-        }
-        */
-
 
         private byte[] EncryptAES(byte[] plaintext, byte[] key)
         {
@@ -672,15 +560,25 @@ namespace Group11_EncryptAndDecryptAppWithAES
         {
             string plainText = richTextBoxFirst.Text;
             byte[] plainBytes = Encoding.UTF8.GetBytes(plainText);
+            if (string.IsNullOrWhiteSpace(plainText))
+            {
+                System.Windows.Forms.MessageBox.Show("Chưa nhập dữ liệu bản rõ.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             autoGenerateKey();
             byte[] encryptedBytes = EncryptAES(plainBytes, key);
             richTextBoxSecond.Text = BitConverter.ToString(encryptedBytes).Replace("-", "");
-            //richTextBoxThird.Text = BitConverter.ToString(encryptedBytes).Replace("-", "");
+
         }
 
         private void btnDecrypt_Click(object sender, EventArgs e)
         {
             string cipherText = richTextBoxThird.Text;
+            if (string.IsNullOrWhiteSpace(cipherText))
+            {
+                System.Windows.Forms.MessageBox.Show("Chưa nhập dữ liệu bản mã.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             byte[] cipherBytes = new byte[cipherText.Length / 2];
             for (int i = 0; i < cipherBytes.Length; i++)
             {

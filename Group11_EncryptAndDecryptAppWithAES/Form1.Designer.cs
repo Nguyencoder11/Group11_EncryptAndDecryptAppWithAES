@@ -89,44 +89,51 @@
             // 
             // btnSave2
             // 
+            btnSave2.BackColor = SystemColors.ActiveCaption;
             btnSave2.Location = new Point(982, 302);
             btnSave2.Name = "btnSave2";
             btnSave2.Size = new Size(101, 53);
             btnSave2.TabIndex = 19;
             btnSave2.Text = "Lưu";
-            btnSave2.UseVisualStyleBackColor = true;
+            btnSave2.UseVisualStyleBackColor = false;
             btnSave2.Click += btnSave2_Click;
             // 
             // chooseFileBtn2
             // 
+            chooseFileBtn2.BackColor = SystemColors.ActiveCaption;
             chooseFileBtn2.Location = new Point(982, 65);
             chooseFileBtn2.Name = "chooseFileBtn2";
             chooseFileBtn2.Size = new Size(101, 50);
             chooseFileBtn2.TabIndex = 18;
             chooseFileBtn2.Text = "File";
-            chooseFileBtn2.UseVisualStyleBackColor = true;
+            chooseFileBtn2.UseVisualStyleBackColor = false;
             chooseFileBtn2.Click += chooseFileBtn2_Click;
             // 
             // btnDecrypt
             // 
-            btnDecrypt.Location = new Point(813, 217);
+            btnDecrypt.BackColor = SystemColors.ActiveCaption;
+            btnDecrypt.Location = new Point(771, 217);
             btnDecrypt.Name = "btnDecrypt";
             btnDecrypt.Size = new Size(112, 53);
             btnDecrypt.TabIndex = 17;
             btnDecrypt.Text = "Giải mã";
-            btnDecrypt.UseVisualStyleBackColor = true;
+            btnDecrypt.UseVisualStyleBackColor = false;
             btnDecrypt.Click += btnDecrypt_Click;
             // 
             // richTextBoxFourth
             // 
+            richTextBoxFourth.BackColor = SystemColors.ButtonHighlight;
+            richTextBoxFourth.Font = new Font("Arial Narrow", 10F, FontStyle.Regular, GraphicsUnit.Point);
             richTextBoxFourth.Location = new Point(662, 303);
             richTextBoxFourth.Name = "richTextBoxFourth";
+            richTextBoxFourth.ReadOnly = true;
             richTextBoxFourth.Size = new Size(310, 118);
             richTextBoxFourth.TabIndex = 16;
             richTextBoxFourth.Text = "";
             // 
             // richTextBoxThird
             // 
+            richTextBoxThird.Font = new Font("Arial Narrow", 10F, FontStyle.Regular, GraphicsUnit.Point);
             richTextBoxThird.Location = new Point(662, 65);
             richTextBoxThird.Name = "richTextBoxThird";
             richTextBoxThird.Size = new Size(310, 120);
@@ -173,46 +180,52 @@
             // 
             // btnEncrypt
             // 
-            btnEncrypt.Location = new Point(286, 217);
+            btnEncrypt.BackColor = SystemColors.ActiveCaption;
+            btnEncrypt.Location = new Point(185, 217);
             btnEncrypt.Name = "btnEncrypt";
             btnEncrypt.Size = new Size(112, 53);
             btnEncrypt.TabIndex = 10;
             btnEncrypt.Text = "Mã hóa";
-            btnEncrypt.UseVisualStyleBackColor = true;
+            btnEncrypt.UseVisualStyleBackColor = false;
             btnEncrypt.Click += btnEncrypt_Click;
             // 
             // btnChangeMode
             // 
+            btnChangeMode.BackColor = SystemColors.ActiveCaption;
             btnChangeMode.Location = new Point(413, 303);
             btnChangeMode.Name = "btnChangeMode";
             btnChangeMode.Size = new Size(112, 53);
             btnChangeMode.TabIndex = 9;
             btnChangeMode.Text = "Chuyển";
-            btnChangeMode.UseVisualStyleBackColor = true;
+            btnChangeMode.UseVisualStyleBackColor = false;
             btnChangeMode.Click += btnChangeMode_Click;
             // 
             // chooseFileBtn
             // 
+            chooseFileBtn.BackColor = SystemColors.ActiveCaption;
             chooseFileBtn.Location = new Point(413, 69);
             chooseFileBtn.Name = "chooseFileBtn";
             chooseFileBtn.Size = new Size(112, 50);
             chooseFileBtn.TabIndex = 8;
             chooseFileBtn.Text = "File";
-            chooseFileBtn.UseVisualStyleBackColor = true;
+            chooseFileBtn.UseVisualStyleBackColor = false;
             chooseFileBtn.Click += chooseFileBtn_Click;
             // 
             // btnSave
             // 
+            btnSave.BackColor = SystemColors.ActiveCaption;
             btnSave.Location = new Point(413, 370);
             btnSave.Name = "btnSave";
             btnSave.Size = new Size(112, 52);
             btnSave.TabIndex = 7;
             btnSave.Text = "Lưu";
-            btnSave.UseVisualStyleBackColor = true;
+            btnSave.UseVisualStyleBackColor = false;
             btnSave.Click += btnSave_Click;
             // 
             // richTextBoxSecond
             // 
+            richTextBoxSecond.BackColor = SystemColors.ButtonHighlight;
+            richTextBoxSecond.Font = new Font("Arial Narrow", 10F, FontStyle.Regular, GraphicsUnit.Point);
             richTextBoxSecond.Location = new Point(80, 304);
             richTextBoxSecond.Name = "richTextBoxSecond";
             richTextBoxSecond.ReadOnly = true;
@@ -222,6 +235,7 @@
             // 
             // richTextBoxFirst
             // 
+            richTextBoxFirst.Font = new Font("Arial Narrow", 10F, FontStyle.Regular, GraphicsUnit.Point);
             richTextBoxFirst.Location = new Point(80, 69);
             richTextBoxFirst.Name = "richTextBoxFirst";
             richTextBoxFirst.Size = new Size(318, 117);
